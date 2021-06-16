@@ -134,12 +134,60 @@
 					$message.classList.remove('visible');
 				};
 
+				// $(document).ready(function() {
+				// 	$("#signup-form").on('submit', function(event) {
+				// 		event.preventDefault(); 
+				// 		var formData = $(this).serialize();
+				// 		$.ajax({
+				// 			type: 'POST',
+				// 			url: 'sendmail.php',
+				// 			dataType: "json",
+				// 			data: formData,
+				// 			success: function(response) { 
+				// 				alert(response.success); 
+				// 			},
+				// 			error: function(xhr, status, error){
+				// 				console.log(xhr); 
+				// 			}
+				// 		});
+				// 	});
+				// });
+
 			// Events.
 			// Note: If you're *not* using AJAX, get rid of this event listener.
 				$form.addEventListener('submit', function(event) {
 
 					event.stopPropagation();
-					event.preventDefault();
+					event.preventDefault(); 
+
+					var request = new XMLHttpRequest();
+					var url = 'sendmail.php';
+					request.open("POST", url, true);
+					request.setRequestHeader("Content-Type", "application/json");
+					request.onreadystatechange = function () {
+						if (request.readyState === 4 && request.status === 200) {
+							var jsonData = JSON.parse(request.response);
+							console.log(jsonData);
+						}
+					};
+					var email = document.getElementById("email").value;
+					var data = JSON.stringify({ "email": email });
+
+					request.send(data);
+
+						// var formData = this.serialize();
+						// $.ajax({
+						// 	type: 'POST',
+						// 	url: 'sendmail.php',
+						// 	dataType: "json",
+						// 	data: formData,
+						// 	success: function(response) { 
+						// 		alert(response.success); 
+						// 	},
+						// 	error: function(xhr, status, error){
+						// 		console.log(xhr); 
+						// 	}
+						// });
 
 					// Hide message.
 						$message._hide();
